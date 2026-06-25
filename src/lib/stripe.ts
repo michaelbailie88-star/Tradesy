@@ -7,7 +7,7 @@ if (!process.env.STRIPE_SECRET_KEY) {
 }
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2024-06-20",
+  apiVersion: "2026-06-24.dahlia" as any,
 });
 
 // Platform fee taken on every job payment, in basis points (e.g. 1000 = 10%)
