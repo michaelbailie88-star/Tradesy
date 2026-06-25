@@ -1,0 +1,129 @@
+// Trades Platform — schema.prisma
+// Two-sided marketplace: Homeowners/Businesses post Jobs, Contractors submit Bids.
+// Stripe Connect (Express accounts) used for contractor payouts.
+// DB target: Postgres (Neon recommended on Vercel — matches Exchange setup).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  HOMEOWNER
+  CONTRACTOR
+  ADMIN
+}
+
+enum JobStatus {
+  OPEN
+  AWARDED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum BidStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  WITHDRAWN
+}
+
+enum PaymentStatus {
+  PENDING
+  HELD_IN_ESCROW
+  RELEASED
+  REFUNDED
+  FAILED
+}
+
+model User {
+  id              String     @id @default(cuid())
+  email           String     @unique
+  name            String?
+  role            UserRole
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  // Contractor-specific
+  stripeAccountId String?    // Stripe Connect Express account ID
+  payoutsEnabled  Boolean    @default(false)
+  trade           String?    // e.g. "plumbing", "electrical"
+  serviceRadius   Int?       // km
+  rating          Float?     @default(0)
+
+  // Homeowner-specific
+  stripeCustomerId String?
+
+  jobsPosted      Job[]      @relation("JobsPosted")
+  bids            Bid[]
+  reviews         Review[]   @relation("ReviewAuthor")
+  reviewsReceived Review[]   @relation("ReviewSubject")
+}
+
+model Job {
+  id          String     @id @default(cuid())
+  title       String
+  description String
+  category    String     // trade category, matches contractor.trade
+  budget      Int?        // cents, optional ceiling set by homeowner
+  location    String
+  status      JobStatus  @default(OPEN)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  homeownerId String
+  homeowner   User       @relation("JobsPosted", fields: [homeownerId], references: [id])
+
+  bids        Bid[]
+  payment     Payment?
+}
+
+model Bid {
+  id           String    @id @default(cuid())
+  amount       Int        // cents
+  message      String?
+  status       BidStatus @default(PENDING)
+  createdAt    DateTime  @default(now())
+
+  jobId        String
+  job          Job       @relation(fields: [jobId], references: [id])
+
+  contractorId String
+  contractor   User      @relation(fields: [contractorId], references: [id])
+}
+
+// Escrow-style payment: homeowner pays platform, platform pays contractor
+// out via Stripe Connect transfer once job is marked COMPLETED.
+model Payment {
+  id                    String        @id @default(cuid())
+  jobId                 String        @unique
+  job                   Job           @relation(fields: [jobId], references: [id])
+
+  amount                Int           // cents, total charged to homeowner
+  platformFee           Int           // cents, your cut
+  status                PaymentStatus @default(PENDING)
+
+  stripePaymentIntentId String?
+  stripeTransferId      String?       // set once funds released to contractor
+
+  createdAt             DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  rating     Int      // 1-5
+  comment    String?
+  createdAt  DateTime @default(now())
+
+  authorId   String
+  author     User     @relation("ReviewAuthor", fields: [authorId], references: [id])
+
+  subjectId  String
+  subject    User     @relation("ReviewSubject", fields: [subjectId], references: [id])
+}
