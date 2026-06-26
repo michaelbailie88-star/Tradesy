@@ -1,35 +1,183 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { redirect } from "next/navigation";
+"use client";
 
-export default async function PostJobPage() {
-  const session = await getServerSession(authOptions);
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { createJob } from "@/services/jobs";
+import Link from "next/link";
 
-  if (!session) {
-    redirect("/login");
+const CATEGORIES = [
+  "Plumbing",
+  "Electrical",
+  "Roofing",
+  "Landscaping",
+  "Painting",
+  "HVAC",
+  "Carpentry",
+  "Flooring",
+  "Handyman",
+  "Moving",
+  "Cleaning",
+];
+
+export default function PostJobPage() {
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    const formData = new FormData(e.currentTarget);
+    const res = await createJob(formData);
+
+    if (res?.error) {
+      setError(res.error);
+      setLoading(false);
+    } else {
+      router.push(`/post-job/success?jobId=${res.jobId}`);
+    }
   }
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold mb-8">Post a New Job</h1>
-      <div className="bg-white p-8 rounded-lg shadow-md border border-gray-200">
-        <p className="text-gray-600 mb-6">
-          This is where homeowners will describe their project and request bids.
-        </p>
-        {/* Placeholder form */}
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Job Title</label>
-            <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" placeholder="e.g. Fix leaking pipe" />
+      <div className="mb-8 flex items-center justify-between">
+        <h1 className="text-3xl font-bold">Post a New Job</h1>
+        <Link href="/" className="text-indigo-600 hover:text-indigo-500 text-sm font-medium">
+          &larr; Back to Home
+        </Link>
+      </div>
+
+      <div className="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="md:col-span-2">
+              <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+                Job Title
+              </label>
+              <input
+                id="title"
+                name="title"
+                type="text"
+                required
+                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border"
+                placeholder="e.g. Fix leaking pipe in kitchen"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
+                Category
+              </label>
+              <select
+                id="category"
+                name="category"
+                required
+                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border"
+              >
+                <option value="">Select a trade</option>
+                {CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
+                Location
+              </label>
+              <input
+                id="location"
+                name="location"
+                type="text"
+                required
+                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border"
+                placeholder="e.g. London, SW1"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-1">
+                Budget Range (optional, £)
+              </label>
+              <input
+                id="budget"
+                name="budget"
+                type="number"
+                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border"
+                placeholder="e.g. 500"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="timeline" className="block text-sm font-medium text-gray-700 mb-1">
+                Timeline
+              </label>
+              <select
+                id="timeline"
+                name="timeline"
+                required
+                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border"
+              >
+                <option value="">When do you need it?</option>
+                <option value="Emergency">Emergency / ASAP</option>
+                <option value="Within 1 week">Within 1 week</option>
+                <option value="Within 1 month">Within 1 month</option>
+                <option value="Flexible">I'm flexible</option>
+              </select>
+            </div>
+
+            <div className="md:col-span-2">
+              <label htmlFor="photos" className="block text-sm font-medium text-gray-700 mb-1">
+                Photo URLs (comma separated)
+              </label>
+              <input
+                id="photos"
+                name="photos"
+                type="text"
+                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border"
+                placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"
+              />
+            </div>
+
+            <div className="md:col-span-2">
+              <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+                Detailed Description
+              </label>
+              <textarea
+                id="description"
+                name="description"
+                rows={5}
+                required
+                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border"
+                placeholder="Describe the job, including any specific requirements or issues..."
+              ></textarea>
+            </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Description</label>
-            <textarea className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" rows={4} placeholder="Describe the job in detail..."></textarea>
+
+          {error && (
+            <div className="bg-red-50 border-l-4 border-red-400 p-4">
+              <div className="flex">
+                <div className="ml-3">
+                  <p className="text-sm text-red-700">{error}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="flex justify-end pt-4">
+            <button
+              type="submit"
+              disabled={loading}
+              className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-3 px-8 text-sm font-bold text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
+            >
+              {loading ? "Posting..." : "Post Job Now"}
+            </button>
           </div>
-          <button className="bg-indigo-600 text-white font-bold py-2 px-4 rounded hover:bg-indigo-700">
-            Post Job (Coming Soon)
-          </button>
-        </div>
+        </form>
       </div>
     </div>
   );
