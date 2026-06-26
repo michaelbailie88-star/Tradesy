@@ -1,11 +1,9 @@
 // Trades Platform — schema.prisma
 // Two-sided marketplace: Homeowners/Businesses post Jobs, Contractors submit Bids.
 // Stripe Connect (Express accounts) used for contractor payouts.
-// DB target: Postgres (Neon recommended on Vercel — matches Exchange setup).
 
 generator client {
   provider = "prisma-client-js"
-  engineType = "library"
 }
 
 datasource db {
@@ -49,8 +47,8 @@ model Job {
   category    String   // trade category, matches contractor.trade
   budget      Int?     // cents, optional ceiling set by homeowner
   location    String
-  timeline    String?  // e.g. "Within 1 week", "Emergency"
-  photos      String?  // JSON string or comma-separated URLs
+  timeline    String?
+  photos      String?
   status      String   @default("OPEN") // OPEN, AWARDED, IN_PROGRESS, COMPLETED, CANCELLED
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
