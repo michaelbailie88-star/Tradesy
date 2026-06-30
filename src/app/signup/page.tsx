@@ -9,15 +9,14 @@ export default function SignupPage() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [role, setRole] = useState<"HOMEOWNER" | "CONTRACTOR">("HOMEOWNER");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     setError(null);
-
     const formData = new FormData(e.currentTarget);
     const res = await signup(formData);
-
     if (res?.error) {
       setError(res.error);
       setLoading(false);
@@ -27,92 +26,100 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-            Create your account
-          </h2>
+    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md mx-auto">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <Link href="/" className="text-3xl font-extrabold text-primary-600 tracking-tight">Tradesy</Link>
+          <h2 className="mt-4 text-3xl font-bold text-gray-900">Create your account</h2>
+          <p className="mt-2 text-sm text-gray-500">Join Tradesy and find your perfect pro or your next job.</p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4 rounded-md shadow-sm">
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                Full Name
-              </label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                required
-                className="relative block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6"
-                placeholder="John Doe"
-              />
-            </div>
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                className="relative block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6"
-                placeholder="john@example.com"
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                className="relative block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6"
-                placeholder="••••••••"
-              />
-            </div>
-            <div>
-              <label htmlFor="role" className="block text-sm font-medium text-gray-700">
-                I am a...
-              </label>
-              <select
-                id="role"
-                name="role"
-                required
-                className="relative block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 ring-1 ring-inset ring-gray-300 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6"
-              >
-                <option value="HOMEOWNER">Homeowner</option>
-                <option value="CONTRACTOR">Contractor</option>
-              </select>
-            </div>
-          </div>
 
-          {error && (
-            <div className="text-red-500 text-sm text-center">
-              {error}
-            </div>
-          )}
+        {/* Role toggle */}
+        <div className="bg-white rounded-card border border-gray-200 shadow-card p-1 flex mb-6">
+          <button
+            type="button"
+            onClick={() => setRole("HOMEOWNER")}
+            className={`flex-1 py-2.5 text-sm font-medium rounded-button transition-all ${role === "HOMEOWNER" ? "bg-primary-600 text-white shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
+          >
+            🏠 Homeowner
+          </button>
+          <button
+            type="button"
+            onClick={() => setRole("CONTRACTOR")}
+            className={`flex-1 py-2.5 text-sm font-medium rounded-button transition-all ${role === "CONTRACTOR" ? "bg-primary-600 text-white shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
+          >
+            🔨 Contractor
+          </button>
+        </div>
 
-          <div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="group relative flex w-full justify-center rounded-md bg-primary-600 py-2 px-3 text-sm font-semibold text-white hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:opacity-50"
-            >
-              {loading ? "Creating account..." : "Sign up"}
+        {/* Form */}
+        <div className="bg-white rounded-card border border-gray-200 shadow-card p-8">
+          <form className="space-y-5" onSubmit={handleSubmit}>
+            <input type="hidden" name="role" value={role} />
+
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+              <input id="name" name="name" type="text" required
+                className="block w-full rounded-button border border-gray-300 py-2.5 px-3.5 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary-500 sm:text-sm"
+                placeholder="John Doe" />
+            </div>
+
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+              <input id="email" name="email" type="email" required
+                className="block w-full rounded-button border border-gray-300 py-2.5 px-3.5 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary-500 sm:text-sm"
+                placeholder="john@example.com" />
+            </div>
+
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+              <input id="password" name="password" type="password" required minLength={8}
+                className="block w-full rounded-button border border-gray-300 py-2.5 px-3.5 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary-500 sm:text-sm"
+                placeholder="At least 8 characters" />
+            </div>
+
+            {role === "CONTRACTOR" && (
+              <>
+                <div>
+                  <label htmlFor="trade" className="block text-sm font-medium text-gray-700 mb-1">Trade Specialty</label>
+                  <select id="trade" name="trade" required
+                    className="block w-full rounded-button border border-gray-300 py-2.5 px-3.5 text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary-500 sm:text-sm bg-white">
+                    <option value="">Select your trade…</option>
+                    <option value="PLUMBING">Plumbing</option>
+                    <option value="ELECTRICAL">Electrical</option>
+                    <option value="ROOFING">Roofing</option>
+                    <option value="LANDSCAPING">Landscaping</option>
+                    <option value="PAINTING">Painting</option>
+                    <option value="HVAC">HVAC</option>
+                    <option value="CARPENTRY">Carpentry</option>
+                    <option value="FLOORING">Flooring</option>
+                    <option value="HANDYMAN">Handyman</option>
+                    <option value="CLEANING">Cleaning</option>
+                  </select>
+                </div>
+                <div className="bg-primary-50 rounded-button p-3 border border-primary-100">
+                  <p className="text-xs text-primary-700 font-medium mb-1">🔒 Trust & Verification</p>
+                  <p className="text-xs text-primary-600">We verify licenses, insurance, and background. You&apos;ll set these up after signing up.</p>
+                </div>
+              </>
+            )}
+
+            {error && (
+              <div className="bg-error/10 border border-error/20 text-error text-sm rounded-button p-3">{error}</div>
+            )}
+
+            <button type="submit" disabled={loading}
+              className="w-full flex justify-center py-2.5 px-4 rounded-button text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 transition-colors">
+              {loading ? "Creating account…" : `Create ${role === "HOMEOWNER" ? "Homeowner" : "Contractor"} Account`}
             </button>
-          </div>
-        </form>
-        <div className="text-center">
-          <Link href="/login" className="text-primary-600 hover:text-primary-500 text-sm">
-            Already have an account? Log in
-          </Link>
+          </form>
         </div>
+
+        <p className="text-center text-sm text-gray-500 mt-6">
+          Already have an account?{" "}
+          <Link href="/login" className="font-medium text-primary-600 hover:text-primary-700">Sign in</Link>
+        </p>
       </div>
     </div>
   );

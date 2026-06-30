@@ -6,12 +6,8 @@ import Link from "next/link";
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
+  if (!session) redirect("/login");
 
-  if (!session) {
-    redirect("/login");
-  }
-
-  // Fetch open jobs
   const openJobs = await prisma.job.findMany({
     where: { status: "OPEN" },
     orderBy: { createdAt: "desc" },
@@ -20,60 +16,70 @@ export default async function DashboardPage() {
   });
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold mb-8">Contractor Dashboard</h1>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-          <h2 className="text-xl font-semibold mb-2">Available Jobs</h2>
-          <p className="text-gray-600">Find new projects to bid on.</p>
-          <p className="mt-4 text-2xl font-bold">{openJobs.length}</p>
+    <div className="container-content py-8 md:py-12">
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">Contractor Dashboard</h1>
+
+      {/* Stats cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-12">
+        <div className="stat-card">
+          <p className="stat-label">Available Jobs</p>
+          <p className="stat-value">{openJobs.length}</p>
+          <p className="text-sm text-gray-500 mt-1">Find new projects to bid on</p>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-          <h2 className="text-xl font-semibold mb-2">My Bids</h2>
-          <p className="text-gray-600">Track your active proposals.</p>
-          <p className="mt-4 text-2xl font-bold">0</p>
+        <div className="stat-card">
+          <p className="stat-label">My Bids</p>
+          <p className="stat-value">0</p>
+          <p className="text-sm text-gray-500 mt-1">Track your active proposals</p>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-          <h2 className="text-xl font-semibold mb-2">Earnings</h2>
-          <p className="text-gray-600">Your total revenue.</p>
-          <p className="mt-4 text-2xl font-bold">$0.00</p>
+        <div className="stat-card">
+          <p className="stat-label">Earnings</p>
+          <p className="stat-value">$0</p>
+          <p className="text-sm text-gray-500 mt-1">Total revenue from completed jobs</p>
         </div>
       </div>
 
-      <h2 className="text-2xl font-bold mb-6">Recent Open Jobs</h2>
-      <div className="bg-white shadow-md rounded-lg overflow-hidden border border-gray-200">
-        <ul className="divide-y divide-gray-200">
-          {openJobs.length > 0 ? (
-            openJobs.map((job) => (
-              <li key={job.id} className="p-6 hover:bg-gray-50 transition">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="text-lg font-bold text-primary-600 mb-1">{job.title}</h3>
-                    <p className="text-sm text-gray-500 mb-2">
-                      {job.category} • {job.location} • Posted by {job.homeowner.name}
-                    </p>
-                    <p className="text-gray-700 line-clamp-2">{job.description}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-bold text-lg text-gray-900">
-                      {job.budget ? `£${job.budget / 100}` : "Flexible"}
-                    </p>
-                    <Link
-                      href={`/jobs/${job.id}`}
-                      className="inline-block mt-4 bg-primary-100 text-primary-700 font-semibold py-2 px-4 rounded-md hover:bg-primary-200 transition text-sm"
-                    >
-                      View Details
-                    </Link>
-                  </div>
+      {/* Recent jobs */}
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-2xl font-bold text-gray-900">Recent Open Jobs</h2>
+        <Link href="/my-bids" className="text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors">
+          View all bids →
+        </Link>
+      </div>
+
+      <div className="space-y-3">
+        {openJobs.length > 0 ? (
+          openJobs.map((job) => (
+            <div key={job.id} className="job-card flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="badge-primary">{job.category}</span>
+                  <span className="status-open">Open</span>
                 </div>
-              </li>
-            ))
-          ) : (
-            <li className="p-12 text-center text-gray-500">
-              No open jobs available at the moment.
-            </li>
-          )}
-        </ul>
+                <h3 className="text-lg font-semibold text-gray-900 truncate">{job.title}</h3>
+                <p className="text-sm text-gray-500 mt-1">
+                  📍 {job.location} · Posted by {job.homeowner.name}
+                </p>
+                <p className="text-sm text-gray-600 mt-1 line-clamp-1">{job.description}</p>
+              </div>
+              <div className="flex sm:flex-col items-center sm:items-end gap-3 sm:gap-1 shrink-0">
+                <p className="text-xl font-bold text-gray-900">
+                  {job.budget ? `$${job.budget / 100}` : "Flexible"}
+                </p>
+                <Link
+                  href={`/jobs/${job.id}`}
+                  className="btn-primary text-xs px-4 py-2"
+                >
+                  View Details
+                </Link>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="stat-card text-center py-12">
+            <p className="text-gray-400 text-lg mb-2">No open jobs available at the moment</p>
+            <p className="text-gray-400 text-sm">Check back soon for new opportunities</p>
+          </div>
+        )}
       </div>
     </div>
   );
