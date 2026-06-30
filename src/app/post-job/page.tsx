@@ -44,7 +44,7 @@ export default function PostJobPage() {
     <div className="max-w-4xl mx-auto px-4 py-12">
       <div className="mb-8 flex items-center justify-between">
         <h1 className="text-3xl font-bold">Post a New Job</h1>
-        <Link href="/" className="text-indigo-600 hover:text-indigo-500 text-sm font-medium">
+        <Link href="/" className="text-primary-600 hover:text-primary-500 text-sm font-medium">
           &larr; Back to Home
         </Link>
       </div>
@@ -61,7 +61,7 @@ export default function PostJobPage() {
                 name="title"
                 type="text"
                 required
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border"
+                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm p-3 border"
                 placeholder="e.g. Fix leaking pipe in kitchen"
               />
             </div>
@@ -74,7 +74,7 @@ export default function PostJobPage() {
                 id="category"
                 name="category"
                 required
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border"
+                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm p-3 border"
               >
                 <option value="">Select a trade</option>
                 {CATEGORIES.map((cat) => (
@@ -94,7 +94,7 @@ export default function PostJobPage() {
                 name="location"
                 type="text"
                 required
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border"
+                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm p-3 border"
                 placeholder="e.g. London, SW1"
               />
             </div>
@@ -107,7 +107,7 @@ export default function PostJobPage() {
                 id="budget"
                 name="budget"
                 type="number"
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border"
+                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm p-3 border"
                 placeholder="e.g. 500"
               />
             </div>
@@ -120,7 +120,7 @@ export default function PostJobPage() {
                 id="timeline"
                 name="timeline"
                 required
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border"
+                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm p-3 border"
               >
                 <option value="">When do you need it?</option>
                 <option value="Emergency">Emergency / ASAP</option>
@@ -138,7 +138,7 @@ export default function PostJobPage() {
                 id="photos"
                 name="photos"
                 type="text"
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border"
+                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm p-3 border"
                 placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"
               />
             </div>
@@ -152,7 +152,7 @@ export default function PostJobPage() {
                 name="description"
                 rows={5}
                 required
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 border"
+                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm p-3 border"
                 placeholder="Describe the job, including any specific requirements or issues..."
               ></textarea>
             </div>
@@ -172,7 +172,7 @@ export default function PostJobPage() {
             <button
               type="submit"
               disabled={loading}
-              className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-3 px-8 text-sm font-bold text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
+              className="inline-flex justify-center rounded-md border border-transparent bg-primary-600 py-3 px-8 text-sm font-bold text-white shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50"
             >
               {loading ? "Posting..." : "Post Job Now"}
             </button>

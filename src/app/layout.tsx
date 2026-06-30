@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { AuthProvider } from "@/components/auth/AuthProvider";
+import Header from "@/components/layout/Header";
 
 export const metadata: Metadata = {
   title: "Tradesy — Your home, our pros",
@@ -25,8 +26,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen">
-        <AuthProvider>{children}</AuthProvider>
+      <body className="min-h-screen bg-gray-50">
+        <AuthProvider>
+          <Header />
+          <main>{children}</main>
+        </AuthProvider>
       </body>
     </html>
   );

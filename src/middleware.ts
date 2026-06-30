@@ -7,11 +7,11 @@ export default withAuth(
     const path = req.nextUrl.pathname;
 
     // Role-based access control
-    if (path.startsWith("/post-job") && token?.role !== "HOMEOWNER") {
+    if ((path.startsWith("/post-job") || path.startsWith("/my-jobs")) && token?.role !== "HOMEOWNER") {
       return NextResponse.redirect(new URL("/", req.url));
     }
 
-    if (path.startsWith("/dashboard") && token?.role !== "CONTRACTOR") {
+    if ((path.startsWith("/dashboard") || path.startsWith("/my-bids")) && token?.role !== "CONTRACTOR") {
       return NextResponse.redirect(new URL("/", req.url));
     }
   },
@@ -23,5 +23,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/post-job/:path*", "/dashboard/:path*", "/profile/:path*"],
+  matcher: ["/post-job/:path*", "/dashboard/:path*", "/profile/:path*", "/my-jobs/:path*", "/my-bids/:path*"],
 };

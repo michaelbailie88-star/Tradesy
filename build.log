@@ -1,0 +1,29 @@
+
+> tradesy-app@1.0.0 build
+> next build
+
+▲ Next.js 16.2.9 (Turbopack)
+- Environments: .env
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 8.0s
+  Running TypeScript ...
+Failed to type check.
+
+./src/app/jobs/[id]/page.tsx:85:25
+Type error: Type '(formData: FormData) => Promise<{ error: string; success?: undefined; bidId?: undefined; } | { success: boolean; bidId: string; error?: undefined; }>' is not assignable to type 'string | ((formData: FormData) => void | Promise<void>) | undefined'.
+  Type '(formData: FormData) => Promise<{ error: string; success?: undefined; bidId?: undefined; } | { success: boolean; bidId: string; error?: undefined; }>' is not assignable to type '(formData: FormData) => void | Promise<void>'.
+    Type 'Promise<{ error: string; success?: undefined; bidId?: undefined; } | { success: boolean; bidId: string; error?: undefined; }>' is not assignable to type 'void | Promise<void>'.
+      Type 'Promise<{ error: string; success?: undefined; bidId?: undefined; } | { success: boolean; bidId: string; error?: undefined; }>' is not assignable to type 'Promise<void>'.
+        Type '{ error: string; success?: undefined; bidId?: undefined; } | { success: boolean; bidId: string; error?: undefined; }' is not assignable to type 'void'.
+          Type '{ error: string; success?: undefined; bidId?: undefined; }' is not assignable to type 'void'.
+
+  [90m83 |[0m                 <div>
+  [90m84 |[0m                   <h3 className=[32m"text-lg font-bold mb-4"[0m>[33mSubmit[0m a [33mBid[0m</h3>
+[31m[1m>[0m [90m85 |[0m                   <form action={submitBid} className=[32m"space-y-4"[0m>
+  [90m   |[0m                         [31m[1m^[0m
+  [90m86 |[0m                     <input [36mtype[0m=[32m"hidden"[0m name=[32m"jobId"[0m value={job.id} />
+  [90m87 |[0m                     <div>
+  [90m88 |[0m                       <label htmlFor=[32m"amount"[0m className=[32m"block text-sm font-medium text-gr...[0m
+Next.js build worker exited with code: 1 and signal: null

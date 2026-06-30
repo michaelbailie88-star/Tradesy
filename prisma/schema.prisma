@@ -7,7 +7,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -27,6 +27,11 @@ model User {
   trade           String?   // e.g. "plumbing", "electrical"
   serviceRadius   Int?      // km
   rating          Float?    @default(0)
+  
+  // Verification flags
+  isIdentityVerified Boolean @default(false)
+  isLicensed         Boolean @default(false)
+  isInsured          Boolean @default(false)
 
   // Homeowner-specific
   stripeCustomerId String?
@@ -35,6 +40,7 @@ model User {
   bids            Bid[]
   reviews         Review[]  @relation("ReviewAuthor")
   reviewsReceived Review[]  @relation("ReviewSubject")
+  messagesSent    Message[] @relation("MessageSender")
 
   @@index([email])
   @@index([trade])
@@ -58,6 +64,7 @@ model Job {
 
   bids        Bid[]
   payment     Payment?
+  messages    Message[]
 
   @@index([category])
   @@index([status])
@@ -114,4 +121,19 @@ model Review {
 
   @@index([subjectId])
   @@index([authorId])
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+
+  jobId     String
+  job       Job      @relation(fields: [jobId], references: [id])
+
+  senderId  String
+  sender    User     @relation("MessageSender", fields: [senderId], references: [id])
+
+  @@index([jobId])
+  @@index([senderId])
 }

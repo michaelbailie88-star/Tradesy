@@ -32,7 +32,7 @@ export default function PostJobSuccessPage({
         <div className="space-y-4">
           <Link
             href="/"
-            className="block w-full bg-indigo-600 text-white font-bold py-3 rounded-lg hover:bg-indigo-700 transition"
+            className="block w-full bg-primary-600 text-white font-bold py-3 rounded-lg hover:bg-primary-700 transition"
           >
             Go to Home
           </Link>

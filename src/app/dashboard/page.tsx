@@ -48,7 +48,7 @@ export default async function DashboardPage() {
               <li key={job.id} className="p-6 hover:bg-gray-50 transition">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="text-lg font-bold text-indigo-600 mb-1">{job.title}</h3>
+                    <h3 className="text-lg font-bold text-primary-600 mb-1">{job.title}</h3>
                     <p className="text-sm text-gray-500 mb-2">
                       {job.category} • {job.location} • Posted by {job.homeowner.name}
                     </p>
@@ -60,7 +60,7 @@ export default async function DashboardPage() {
                     </p>
                     <Link
                       href={`/jobs/${job.id}`}
-                      className="inline-block mt-4 bg-indigo-100 text-indigo-700 font-semibold py-2 px-4 rounded-md hover:bg-indigo-200 transition text-sm"
+                      className="inline-block mt-4 bg-primary-100 text-primary-700 font-semibold py-2 px-4 rounded-md hover:bg-primary-200 transition text-sm"
                     >
                       View Details
                     </Link>

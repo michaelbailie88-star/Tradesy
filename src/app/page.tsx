@@ -17,11 +17,11 @@ export default function HomePage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <header className="flex justify-between items-center mb-12">
-        <h1 className="text-4xl font-bold text-indigo-600">Tradesy</h1>
+        <h1 className="text-4xl font-bold text-primary-600">Tradesy</h1>
         <nav className="space-x-4">
           {session ? (
             <div className="flex items-center space-x-4">
-              <Link href="/profile" className="text-gray-700 hover:text-indigo-600 font-medium">
+              <Link href="/profile" className="text-gray-700 hover:text-primary-600 font-medium">
                 Hi, <strong>{session.user?.name}</strong> ({ session.user?.role })
               </Link>
               <button
@@ -33,12 +33,12 @@ export default function HomePage() {
             </div>
           ) : (
             <>
-              <Link href="/login" className="text-gray-600 hover:text-indigo-600 font-medium">
+              <Link href="/login" className="text-gray-600 hover:text-primary-600 font-medium">
                 Log in
               </Link>
               <Link
                 href="/signup"
-                className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded"
+                className="bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2 px-4 rounded"
               >
                 Sign up
               </Link>
@@ -61,7 +61,7 @@ export default function HomePage() {
             session.user?.role === "HOMEOWNER" ? (
               <Link
                 href="/post-job"
-                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-lg text-lg"
+                className="bg-primary-600 hover:bg-primary-700 text-white font-bold py-4 px-8 rounded-lg text-lg"
               >
                 Post a Job
               </Link>
@@ -76,7 +76,7 @@ export default function HomePage() {
           ) : (
             <Link
               href="/signup"
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-lg text-lg"
+              className="bg-primary-600 hover:bg-primary-700 text-white font-bold py-4 px-8 rounded-lg text-lg"
             >
               Get Started
             </Link>

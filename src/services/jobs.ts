@@ -62,3 +62,41 @@ export async function createJob(formData: FormData) {
     return { error: "Failed to create job. Please try again." };
   }
 }
+
+export async function completeJob(jobId: string) {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return { error: "Unauthorized." };
+  }
+
+  try {
+    const job = await prisma.job.findUnique({
+      where: { id: jobId },
+    });
+
+    if (!job) {
+      return { error: "Job not found." };
+    }
+
+    // Only homeowner or the awarded contractor should be able to mark as complete?
+    // Usually homeowner confirms it.
+    if (job.homeownerId !== (session.user as any).id) {
+      return { error: "Unauthorized. Only the homeowner can mark a job as completed." };
+    }
+
+    if (job.status !== "AWARDED") {
+      return { error: "Only awarded jobs can be marked as completed." };
+    }
+
+    await prisma.job.update({
+      where: { id: jobId },
+      data: { status: "COMPLETED" },
+    });
+
+    return { success: true };
+  } catch (err) {
+    console.error("Complete job error:", err);
+    return { error: "Failed to complete job." };
+  }
+}

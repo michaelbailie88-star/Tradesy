@@ -1,0 +1,42 @@
+
+> tradesy-app@1.0.0 build
+> next build
+
+▲ Next.js 16.2.9 (Turbopack)
+- Environments: .env
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 8.6s
+  Running TypeScript ...
+  Finished TypeScript in 3.8s ...
+  Collecting page data using 1 worker ...
+  Generating static pages using 1 worker (0/13) ...
+  Generating static pages using 1 worker (3/13) 
+  Generating static pages using 1 worker (6/13) 
+  Generating static pages using 1 worker (9/13) 
+✓ Generating static pages using 1 worker (13/13) in 258ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/users
+├ ƒ /dashboard
+├ ƒ /jobs/[id]
+├ ○ /login
+├ ƒ /my-bids
+├ ƒ /my-jobs
+├ ƒ /my-jobs/[id]
+├ ○ /post-job
+├ ○ /post-job/success
+├ ƒ /profile
+└ ○ /signup
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
