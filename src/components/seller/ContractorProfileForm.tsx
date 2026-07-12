@@ -1,145 +1,110 @@
 "use client";
 
-import { updateContractorProfile } from "@/services/contractors";
 import { useState } from "react";
+import { updateContractorProfile } from "@/services/contractors";
 
-export default function ContractorProfileForm({ 
-  user 
-}: { 
-  user: { 
-    name?: string | null, 
-    trade?: string | null, 
-    serviceRadius?: number | null,
-    isIdentityVerified?: boolean,
-    isLicensed?: boolean,
-    isInsured?: boolean
-  } 
-}) {
+interface ContractorProfileFormProps {
+  user: {
+    id: string;
+    name: string | null;
+    email: string;
+    trade: string | null;
+    serviceRadius: number | null;
+    isIdentityVerified: boolean;
+    isLicensed: boolean;
+    isInsured: boolean;
+    rating: number | null;
+  };
+}
+
+export default function ContractorProfileForm({ user }: ContractorProfileFormProps) {
+  const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(formData: FormData) {
-    setIsSubmitting(true);
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setLoading(true);
     setError(null);
-    setSuccess(false);
-    
-    const result = await updateContractorProfile(formData);
-    
-    setIsSubmitting(false);
-    if (result?.error) {
-      setError(result.error);
+    setSuccess(null);
+
+    const formData = new FormData(e.currentTarget);
+    const res = await updateContractorProfile(formData);
+
+    if (res?.error) {
+      setError(res.error);
     } else {
-      setSuccess(true);
+      setSuccess("Profile updated successfully.");
     }
+    setLoading(false);
   }
 
   return (
-    <form action={handleSubmit} className="space-y-6">
-      <div className="bg-primary-50 p-4 rounded-lg mb-6 border border-primary-100">
-        <h3 className="text-sm font-bold text-primary-800 mb-2 uppercase tracking-tight">Trust & Verification</h3>
-        <p className="text-xs text-primary-600 mb-4">Verified pros get 3x more bids. Toggle these to simulate the verification process.</p>
-        
-        <div className="space-y-3">
-          <div className="flex items-center">
-            <input
-              id="isIdentityVerified"
-              name="isIdentityVerified"
-              type="checkbox"
-              defaultChecked={user.isIdentityVerified}
-              className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-            />
-            <label htmlFor="isIdentityVerified" className="ml-2 block text-sm text-gray-700">
-              Identity Verified
-            </label>
-          </div>
-          <div className="flex items-center">
-            <input
-              id="isLicensed"
-              name="isLicensed"
-              type="checkbox"
-              defaultChecked={user.isLicensed}
-              className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-            />
-            <label htmlFor="isLicensed" className="ml-2 block text-sm text-gray-700">
-              Licensed Professional
-            </label>
-          </div>
-          <div className="flex items-center">
-            <input
-              id="isInsured"
-              name="isInsured"
-              type="checkbox"
-              defaultChecked={user.isInsured}
-              className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-            />
-            <label htmlFor="isInsured" className="ml-2 block text-sm text-gray-700">
-              Insurance Verified
-            </label>
-          </div>
-        </div>
-      </div>
-
+    <form className="space-y-4" onSubmit={handleSubmit}>
       <div>
-        <label htmlFor="name" className="block text-sm font-medium text-gray-700">Full Name</label>
+        <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
         <input
           type="text"
           name="name"
           id="name"
           defaultValue={user.name || ""}
-          required
-          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+          className="w-full px-4 py-2 border border-gray-300 rounded-md text-sm"
         />
       </div>
 
       <div>
-        <label htmlFor="trade" className="block text-sm font-medium text-gray-700">Primary Trade</label>
+        <label htmlFor="trade" className="block text-sm font-medium text-gray-700 mb-1">Trade</label>
         <select
           name="trade"
           id="trade"
           defaultValue={user.trade || ""}
-          required
-          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+          className="w-full px-4 py-2 border border-gray-300 rounded-md text-sm"
         >
-          <option value="">Select a trade</option>
-          <option value="plumbing">Plumbing</option>
-          <option value="electrical">Electrical</option>
-          <option value="roofing">Roofing</option>
-          <option value="landscaping">Landscaping</option>
-          <option value="painting">Painting</option>
-          <option value="hvac">HVAC</option>
-          <option value="carpentry">Carpentry</option>
-          <option value="handyman">Handyman</option>
+          <option value="">Select your trade</option>
+          <option value="Plumbing">Plumbing</option>
+          <option value="Electrical">Electrical</option>
+          <option value="Roofing">Roofing</option>
+          <option value="Landscaping">Landscaping</option>
+          <option value="Painting">Painting</option>
+          <option value="HVAC">HVAC</option>
+          <option value="Carpentry">Carpentry</option>
+          <option value="Flooring">Flooring</option>
+          <option value="Handyman">Handyman</option>
+          <option value="Cleaning">Cleaning</option>
         </select>
       </div>
 
       <div>
-        <label htmlFor="serviceRadius" className="block text-sm font-medium text-gray-700">Service Radius (km)</label>
+        <label htmlFor="serviceRadius" className="block text-sm font-medium text-gray-700 mb-1">Service Radius (km)</label>
         <input
           type="number"
           name="serviceRadius"
           id="serviceRadius"
-          defaultValue={user.serviceRadius || 20}
-          required
-          min="1"
-          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+          defaultValue={user.serviceRadius || 25}
+          min={1}
+          max={500}
+          className="w-full px-4 py-2 border border-gray-300 rounded-md text-sm"
         />
       </div>
 
       {error && (
-        <div className="text-red-600 text-sm">{error}</div>
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
+          {error}
+        </div>
       )}
-      
+
       {success && (
-        <div className="text-green-600 text-sm">Profile updated successfully!</div>
+        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md text-sm">
+          {success}
+        </div>
       )}
 
       <button
         type="submit"
-        disabled={isSubmitting}
-        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:bg-primary-400"
+        disabled={loading}
+        className="w-full bg-primary-600 text-white font-bold py-3 px-4 rounded-md hover:bg-primary-700 transition disabled:opacity-50"
       >
-        {isSubmitting ? "Saving..." : "Save Profile"}
+        {loading ? "Saving..." : "Save Profile"}
       </button>
     </form>
   );

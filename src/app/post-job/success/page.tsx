@@ -27,7 +27,7 @@ export default function PostJobSuccessPage({
         </div>
         <h1 className="text-2xl font-bold text-gray-900 mb-2">Job Posted Successfully!</h1>
         <p className="text-gray-600 mb-8">
-          Your project is now live on the Tradesy marketplace. Contractors will be notified and you'll start receiving bids soon.
+          Your project is now live on the Vettd marketplace. Contractors will be notified and you'll start receiving bids soon.
         </p>
         <div className="space-y-4">
           <Link

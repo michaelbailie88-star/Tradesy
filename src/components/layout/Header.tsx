@@ -9,12 +9,12 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200">
+    <header className="sticky top-0 z-50 bg-[#FAF9F6]/95 backdrop-blur-sm border-b border-[#E2DDD6]">
       <div className="container-content flex items-center justify-between h-16">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 shrink-0">
           <span className="text-2xl font-extrabold tracking-tight text-primary-600">
-            Tradesy
+            Vettd
           </span>
         </Link>
 

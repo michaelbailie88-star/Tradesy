@@ -1,3 +1,10 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "My Bids — Vettd",
+  description: "Track your submitted bids, review responses, and manage active jobs on Vettd.",
+};
+
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";

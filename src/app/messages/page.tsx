@@ -1,3 +1,10 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Messages — Vettd",
+  description: "View and manage your messages about ongoing jobs on Vettd.",
+};
+
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -8,7 +15,7 @@ export default async function MessagesPage() {
   const session = await getServerSession(authOptions);
 
   if (!session) {
-    redirect("/login");
+    redirect("/api/auth/signin?callbackUrl=/messages");
   }
 
   const userId = (session.user as any).id;

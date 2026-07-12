@@ -1,3 +1,10 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "My Dashboard — Vettd",
+  description: "Manage your jobs, bids, and account settings on Vettd.",
+};
+
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";

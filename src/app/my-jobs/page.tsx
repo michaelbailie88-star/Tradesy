@@ -1,3 +1,10 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "My Jobs — Vettd",
+  description: "Manage your posted jobs, review bids, and hire contractors on Vettd.",
+};
+
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";

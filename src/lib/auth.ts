@@ -6,6 +6,10 @@ import { compare } from "bcrypt";
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
+    maxAge: 24 * 60 * 60, // 24 hours
+  },
+  jwt: {
+    maxAge: 24 * 60 * 60, // 24 hours
   },
   providers: [
     CredentialsProvider({
@@ -54,8 +58,8 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.role = token.role;
-        session.user.id = token.id;
+        (session.user as any).role = token.role;
+        (session.user as any).id = token.id;
       }
       return session;
     },
