@@ -52,6 +52,7 @@ model User {
   reviewsReceived Review[]  @relation("ReviewSubject")
   messagesSent    Message[] @relation("MessageSender")
   notifications   Notification[]
+  services        Service[]
 
   @@index([email])
   @@index([trade])
@@ -164,4 +165,24 @@ model Notification {
   @@index([userId])
   @@index([userId, read])
   @@index([createdAt])
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  category    String   // matches trade category
+  priceType   String   @default("fixed") // fixed, hourly, quote
+  price       Int?     // cents, for fixed/hourly pricing
+  duration    String?  // e.g. "2-3 hours", "Full day"
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  contractorId String
+  contractor   User     @relation(fields: [contractorId], references: [id])
+
+  @@index([contractorId])
+  @@index([category])
+  @@index([active])
 }
