@@ -275,6 +275,18 @@
 }
 .search-bar input::placeholder { color: #9C958A; }
 
+/* ====== BADGE ====== */
+.badge-primary {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.5rem;
+  border-radius: var(--radius-badge);
+  font-size: 0.75rem;
+  font-weight: 600;
+  background-color: var(--color-primary-50);
+  color: var(--color-primary-700);
+}
+
 /* ====== JOB CARD ====== */
 .job-card {
   background: var(--color-warm-card);
