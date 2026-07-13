@@ -129,6 +129,54 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* ═══════ HOW IT WORKS ═══════ */}
+      <section className="py-16 md:py-20 bg-[#FCFBFA]">
+        <div className="container-content">
+          <div className="text-center mb-4">
+            <span className="badge-primary text-xs tracking-widest uppercase">Simple Process</span>
+          </div>
+          <h2 className="section-heading">How <span className="gradient-text">Vettd</span> Works</h2>
+          <p className="section-subheading">For homeowners, businesses, and pros — a seamless flow from start to finish.</p>
+
+          <div className="hidden md:block relative h-1 max-w-3xl mx-auto mb-12">
+            <div className="absolute inset-0 bg-gradient-to-r from-[#2852C7]/30 via-[#E8911A] to-[#2852C7]/30 rounded-full opacity-40" />
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
+            {[
+              { step: "01", icon: "📋", title: "Post Your Job", desc: "Describe your project, set your budget, and share photos. Homeowners and businesses post for free — takes 2 minutes." },
+              { step: "02", icon: "💰", title: "Get Free Bids", desc: "Receive quotes from verified, licensed pros. Compare prices, reviews, and availability side by side — no obligation." },
+              { step: "03", icon: "🛡️", title: "Hire & Pay Securely", desc: "Choose the best pro, agree on scope, and pay through our secure escrow system. Funds release when you are satisfied." },
+            ].map((item, i) => (
+              <div key={i} className="text-center relative group">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#EBF0F8] to-[#D6E2F1] flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-sm">
+                  <span className="text-3xl">{item.icon}</span>
+                </div>
+                <div className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#2852C7] text-white text-xs font-bold mb-3 shadow-md">
+                  {item.step}
+                </div>
+                <h3 className="text-xl font-bold text-[#163D75] mb-3">{item.title}</h3>
+                <p className="text-sm text-[#6B6358] leading-relaxed max-w-sm mx-auto">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Dual customer type */}
+          <div className="grid sm:grid-cols-2 gap-6 mt-12 max-w-3xl mx-auto">
+            <div className="bg-[#F7F5F0] rounded-xl border border-[#E2DDD6] p-6 text-center hover:shadow-md transition-all">
+              <span className="text-2xl mb-2 block">🏠</span>
+              <h4 className="font-bold text-[#163D75] mb-1">For Homeowners</h4>
+              <p className="text-sm text-[#6B6358]">Post home projects, compare free bids, and hire with confidence. From plumbing to painting, find the right pro for any job.</p>
+            </div>
+            <div className="bg-[#F7F5F0] rounded-xl border border-[#E2DDD6] p-6 text-center hover:shadow-md transition-all">
+              <span className="text-2xl mb-2 block">🏢</span>
+              <h4 className="font-bold text-[#163D75] mb-1">For Businesses</h4>
+              <p className="text-sm text-[#6B6358]">Commercial maintenance, fit-outs, signage, and more. Find vetted contractors who understand business hours, access requirements, and compliance.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ═══════ DECORATIVE DIVIDER ═══════ */}
       <div className="section-divider" />
 
