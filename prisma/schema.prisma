@@ -1,6 +1,5 @@
-// Trades Platform — schema.prisma
-// Two-sided marketplace: Homeowners/Businesses post Jobs, Contractors submit Bids.
-// Stripe Connect (Express accounts) used for contractor payouts.
+// Vettd Marketplace — schema.prisma
+// Three-sided marketplace: Homeowners/Businesses post Jobs, Contractors submit Bids.
 
 generator client {
   provider = "prisma-client-js"
@@ -14,24 +13,35 @@ datasource db {
 model User {
   id              String    @id @default(cuid())
   email           String    @unique
-  password        String?   // Hashed password
+  password        String?
   name            String?
   image           String?
   role            String    @default("HOMEOWNER") // HOMEOWNER, CONTRACTOR, ADMIN
+  customerType    String    @default("homeowner") // homeowner, business, contractor
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
+  // Business-specific
+  businessName    String?
+  businessType    String?   // restaurant, cafe, salon, retail, office, landlord, other
+  businessAddress String?
+  hstNumber       String?
+  siteContactName String?
+  siteContactPhone String?
+
   // Contractor-specific
-  stripeAccountId String?   // Stripe Connect Express account ID
+  stripeAccountId String?
   payoutsEnabled  Boolean   @default(false)
-  trade           String?   // e.g. "plumbing", "electrical"
-  serviceRadius   Int?      // km
+  trade           String?
+  serviceRadius   Int?
   rating          Float?    @default(0)
-  
+  takesCommercial Boolean   @default(false) // toggle for commercial work
+
   // Verification flags
   isIdentityVerified Boolean @default(false)
   isLicensed         Boolean @default(false)
   isInsured          Boolean @default(false)
+  isWSIBClear        Boolean @default(false) // WSIB compliance
 
   // Homeowner-specific
   stripeCustomerId String?
@@ -41,23 +51,30 @@ model User {
   reviews         Review[]  @relation("ReviewAuthor")
   reviewsReceived Review[]  @relation("ReviewSubject")
   messagesSent    Message[] @relation("MessageSender")
+  notifications   Notification[]
 
   @@index([email])
   @@index([trade])
+  @@index([customerType])
 }
 
 model Job {
   id          String   @id @default(cuid())
   title       String
   description String
-  category    String   // trade category, matches contractor.trade
-  budget      Int?     // cents, optional ceiling set by homeowner
+  category    String
+  budget      Int?
   location    String
   timeline    String?
   photos      String?
   status      String   @default("OPEN") // OPEN, AWARDED, IN_PROGRESS, COMPLETED, CANCELLED
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  // Business-specific
+  accessHours    String?  // e.g. "After 6pm", "Weekends only"
+  siteContact    String?  // On-site contact person
+  recurring      Boolean? @default(false) // Recurring maintenance
 
   homeownerId String
   homeowner   User     @relation("JobsPosted", fields: [homeownerId], references: [id])
@@ -69,11 +86,12 @@ model Job {
   @@index([category])
   @@index([status])
   @@index([homeownerId])
+  @@index([createdAt])
 }
 
 model Bid {
   id           String   @id @default(cuid())
-  amount       Int      // cents
+  amount       Int
   message      String?
   status       String   @default("PENDING") // PENDING, ACCEPTED, REJECTED, WITHDRAWN
   createdAt    DateTime @default(now())
@@ -89,20 +107,15 @@ model Bid {
   @@index([status])
 }
 
-// Escrow-style payment: homeowner pays platform, platform pays contractor
-// out via Stripe Connect transfer once job is marked COMPLETED.
 model Payment {
   id              String   @id @default(cuid())
   jobId           String   @unique
   job             Job      @relation(fields: [jobId], references: [id])
-
-  amount          Int      // cents, total charged to homeowner
-  platformFee     Int      // cents, your cut
-  status          String   @default("PENDING") // PENDING, HELD_IN_ESCROW, RELEASED, REFUNDED, FAILED
-
+  amount          Int
+  platformFee     Int
+  status          String   @default("PENDING")
   stripePaymentIntentId String?
-  stripeTransferId      String? // set once funds released to contractor
-
+  stripeTransferId      String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }
@@ -115,7 +128,6 @@ model Review {
 
   authorId   String
   author     User     @relation("ReviewAuthor", fields: [authorId], references: [id])
-
   subjectId  String
   subject    User     @relation("ReviewSubject", fields: [subjectId], references: [id])
 
@@ -130,10 +142,26 @@ model Message {
 
   jobId     String
   job       Job      @relation(fields: [jobId], references: [id])
-
   senderId  String
   sender    User     @relation("MessageSender", fields: [senderId], references: [id])
 
   @@index([jobId])
   @@index([senderId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  type      String   // bid_received, bid_accepted, message, job_closed, review_received
+  title     String
+  body      String?
+  read      Boolean  @default(false)
+  link      String?  // URL to relevant page
+  createdAt DateTime @default(now())
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([userId, read])
+  @@index([createdAt])
 }
