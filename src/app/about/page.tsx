@@ -244,6 +244,53 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* ═══════ TRUST & SAFETY ═══════ */}
+      <section className="py-16 md:py-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#EBF0F8]/50 to-[#F7F5F0]" />
+        <div className="relative container-content">
+          <div className="text-center mb-4">
+            <span className="badge-success text-xs tracking-widest uppercase">Trust & Safety</span>
+          </div>
+          <h2 className="section-heading">Your Safety is Our <span className="gradient-text">Priority</span></h2>
+          <p className="section-subheading">Every pro on Vettd goes through rigorous verification so you can hire with confidence.</p>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+            {[
+              { icon: "🛡️", title: "Background Checks", desc: "Every contractor undergoes a criminal background check before they can join Vettd. We take safety seriously." },
+              { icon: "📋", title: "License Verification", desc: "We verify all trade licenses to ensure every pro is legally qualified to do the work they advertise." },
+              { icon: "🔒", title: "Insurance Compliance", desc: "Liability insurance and WSIB/workers compensation are verified. You are protected on every job." },
+              { icon: "⭐", title: "Real Reviews System", desc: "Both parties rate each other after every job. Our transparent review system keeps everyone accountable." },
+              { icon: "💰", title: "Secure Escrow Payments", desc: "Funds are held securely and released in milestones. You only pay when you are satisfied with the completed work." },
+              { icon: "📞", title: "Dedicated Support", desc: "Our trust and safety team is available to help resolve any issues. We stand behind every transaction on Vettd." },
+            ].map((item, i) => (
+              <div key={i} className="bg-[#FCFBFA] rounded-xl border border-[#E2DDD6] p-6 hover:shadow-md hover:-translate-y-0.5 transition-all">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#ECFDF5] to-[#D1FAE5] flex items-center justify-center mb-4 shadow-sm">
+                  <span className="text-2xl">{item.icon}</span>
+                </div>
+                <h3 className="font-bold text-[#163D75] mb-2">{item.title}</h3>
+                <p className="text-sm text-[#6B6358] leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-10 bg-[#FCFBFA] rounded-xl border border-[#E2DDD6] p-6 md:p-8 shadow-sm text-center">
+            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6">
+              <span className="verified-badge text-sm px-4 py-2">
+                <svg className="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                Verified
+              </span>
+              <span className="badge-primary text-sm px-4 py-2">📋 Licensed</span>
+              <span className="badge-primary text-sm px-4 py-2">🛡️ Insured</span>
+              <span className="badge-primary text-sm px-4 py-2">🔍 Background Checked</span>
+              <span className="badge-accent text-sm px-4 py-2">⭐ Top Rated</span>
+            </div>
+            <p className="text-xs text-[#9C958A] mt-4">
+              WSIB compliance verified for all commercial-ready contractors
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* ═══════ VALUES ═══════ */}
       <section className="py-16 md:py-20 bg-warm-noise">
         <div className="container-content">
