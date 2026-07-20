@@ -53,16 +53,23 @@ export default function LoginForm() {
         <label htmlFor="password" className="block text-sm font-medium text-[#6B6358]">
           Password
         </label>
-        <input
-          id="password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          minLength={8}
-          className="mt-1 block w-full px-4 py-2.5 border border-[#D6D0C8] rounded-lg text-sm bg-white focus:ring-2 focus:ring-[#2852C7]/20 focus:border-[#2852C7] outline-none text-[#2D2A25]"
-          placeholder="Enter your password"
-        />
+        <div className="relative">
+          <input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            minLength={8}
+            className="mt-1 block w-full px-4 py-2.5 border border-[#D6D0C8] rounded-lg text-sm bg-white focus:ring-2 focus:ring-[#2852C7]/20 focus:border-[#2852C7] outline-none text-[#2D2A25]"
+            placeholder="Enter your password"
+          />
+          <div className="absolute right-0 top-0 mt-1 mr-1">
+            <Link href="/forgot-password" className="text-xs text-[#2852C7] hover:text-[#1E4D92] px-2 py-1 inline-block">
+              Forgot?
+            </Link>
+          </div>
+        </div>
       </div>
 
       {error && (

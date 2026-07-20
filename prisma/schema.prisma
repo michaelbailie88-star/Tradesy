@@ -46,6 +46,10 @@ model User {
   // Homeowner-specific
   stripeCustomerId String?
 
+  // Password reset
+  resetToken       String?   @unique
+  resetTokenExpiry DateTime?
+
   jobsPosted      Job[]     @relation("JobsPosted")
   bids            Bid[]
   reviews         Review[]  @relation("ReviewAuthor")

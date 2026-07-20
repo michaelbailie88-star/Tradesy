@@ -5,6 +5,7 @@ import { authOptions } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import BidForm from "@/components/bids/BidForm";
+import ShareJob from "@/components/jobs/ShareJob";
 import MessageThread from "@/components/jobs/MessageThread";
 import { getMessages } from "@/services/messages";
 
@@ -41,10 +42,11 @@ export default async function JobDetailsPage({ params }: { params: { id: string 
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
-      <div className="mb-8">
+      <div className="mb-8 flex items-center justify-between">
         <Link href="/dashboard" className="text-primary-600 hover:text-primary-800 flex items-center">
           ← Back to Dashboard
         </Link>
+        <ShareJob jobTitle={job.title} jobId={job.id} />
       </div>
 
       <div className="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200">
