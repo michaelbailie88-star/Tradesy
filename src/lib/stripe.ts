@@ -1,14 +1,19 @@
 import Stripe from "stripe";
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  // Don't throw at import time in dev/build — only when actually used,
-  // so the app can still boot without keys set for early scaffolding.
-  console.warn("STRIPE_SECRET_KEY is not set");
-}
+let stripeInstance: Stripe | null = null;
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2026-06-24.dahlia" as any,
-});
+export function getStripe(): Stripe {
+  if (!stripeInstance) {
+    const key = process.env.STRIPE_SECRET_KEY;
+    if (!key) {
+      throw new Error("STRIPE_SECRET_KEY is not set — payments are unavailable");
+    }
+    stripeInstance = new Stripe(key, {
+      apiVersion: "2026-06-24.dahlia" as any,
+    });
+  }
+  return stripeInstance;
+}
 
 // Platform fee taken on every job payment, in basis points (e.g. 1000 = 10%)
 export const PLATFORM_FEE_BPS = 1000;

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { stripe, calculatePlatformFee } from "@/lib/stripe";
+import { getStripe, calculatePlatformFee } from "@/lib/stripe";
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     const totalAmount = bid.amount + platformFee;
 
     try {
-      const paymentIntent = await stripe.paymentIntents.create({
+      const paymentIntent = await getStripe().paymentIntents.create({
         amount: totalAmount,
         currency: "usd",
         metadata: {
@@ -79,7 +79,7 @@ export async function POST(req: Request) {
 
     try {
       // Capture the payment intent (release funds)
-      await stripe.paymentIntents.capture(job.payment.stripePaymentIntentId);
+      await getStripe().paymentIntents.capture(job.payment.stripePaymentIntentId);
 
       await prisma.$transaction([
         prisma.job.update({ where: { id: jobId }, data: { status: "COMPLETED" } }),
@@ -108,7 +108,7 @@ export async function POST(req: Request) {
 
     try {
       if (job.payment?.stripePaymentIntentId) {
-        await stripe.paymentIntents.cancel(job.payment.stripePaymentIntentId);
+        await getStripe().paymentIntents.cancel(job.payment.stripePaymentIntentId);
       }
       await prisma.$transaction([
         prisma.job.update({ where: { id: jobId }, data: { status: "CANCELLED" } }),
